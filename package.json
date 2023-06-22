@@ -8,12 +8,13 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.14",
+    "@heroicons/vue": "^2.0.18",
     "@mdi/font": "^7.2.96",
     "core-js": "^3.8.3",
     "vue": "^3.3.4",
     "vue-good-table": "^2.21.11",
-    "vue-router": "^4.2.2",
-    "vuetify": "^3.3.3"
+    "vue-router": "^4.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
@@ -21,8 +22,11 @@
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
+    "autoprefixer": "^10.4.14",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.7.1"
+    "eslint-plugin-vue": "^8.7.1",
+    "postcss": "^8.4.24",
+    "tailwindcss": "^3.3.2"
   },
   "eslintConfig": {
     "root": true,

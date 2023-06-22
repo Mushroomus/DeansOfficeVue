@@ -1,8 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import UserTable from './components/UserTable.vue';
+import LoginForm from './components/LoginForm.vue'
+import MainView from './components/MainView.vue'
 
 const routes = [
-  { path: '/users', component: UserTable },
+  { path: '/', redirect: '/home' },
+  { path: '/home', component: MainView},
+  { path: '/login', component: LoginForm },
 ];
 
 const router = createRouter({

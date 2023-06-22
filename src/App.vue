@@ -1,95 +1,123 @@
 <template>
-  <v-app>
-    <v-app-bar app color="indigo">
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer">
-        <v-icon>{{ drawer ? 'mdi-chevron-left' : 'mdi-chevron-right' }}</v-icon>
-      </v-app-bar-nav-icon>
-      <v-toolbar-title>Dean's Office</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn text @click="showLoginForm = true" v-if="!loggedIn">Login</v-btn>
-      <v-btn text @click="logout" v-if="loggedIn">Logout</v-btn>
-    </v-app-bar>
+  <header class="bg-white">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+      <div class="flex items-center">
+        <a href="#" class="-m-1.5 p-1.5">
+          <span class="sr-only">Your Company</span>
+          <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" width="30" alt="" />
+        </a>
 
-    <v-navigation-drawer v-model="drawer" :rail="rail" width="1000px" floating permanent>
-      <v-list density="compact" nav>
-        <v-list-item v-for="item in filteredMenuItems" :key="item.title" @click="selectMenuItem(item)">
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>    
+        <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Dean's Office</a>
+        <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</a>
+        <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Help</a>
 
-    <v-main>
-      <v-container>
-        <component :is="currentComponent"></component>
-        <v-container v-if="showLoginForm">
-          <LoginForm :loggedIn="loggedIn" @loginSuccess="loginSuccess" />
-        </v-container>
-        <router-view v-else></router-view>
-      </v-container>
-    </v-main>
+        <div v-if="role == 'WORKER'" class="relative ml-4" ref="dropdown">
+          <button @click="toggleDropdown" class="text-sm font-semibold leading-6 text-gray-900">
+            Appointments
+          </button>
+          <div v-show="showDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Create</a>
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Manage</a>
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">History</a>
+            </div>
+          </div>
+        </div>
 
-  </v-app>
+      </div>
+
+      <div class="hidden lg:flex lg:justify-end">
+
+      <div v-if="showLogoutNotification">
+          <div class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
+          <span class="font-semibold mr-2 text-left flex-auto">You have been log out</span>
+          </div>
+      </div>
+
+        <router-link v-if="loggedIn" to="/home">
+          <button
+            class="text-sm font-semibold leading-6 text-gray-900 border border-gray-900 rounded-md px-4 py-2 ml-4 hover:bg-gray-900 hover:text-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600"
+            @click="logout"
+          >
+            Log out
+          </button>
+          </router-link>
+        <router-link v-else to="/login">
+          <button
+            class="text-sm font-semibold leading-6 text-gray-900 border border-gray-900 rounded-md px-4 py-2 ml-4 hover:bg-gray-900 hover:text-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600"
+          >
+            Log in
+          </button>
+        </router-link>
+      </div>
+    </nav>
+  </header>
+  <main>
+      <router-view></router-view>
+  </main>
 </template>
 
 <script>
-import LoginForm from './components/LoginForm.vue';
-import '@mdi/font/css/materialdesignicons.css';
+import eventBus from './eventBus';
+import { useRouter } from 'vue-router';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 export default {
   data() {
     return {
-      drawer: true,
-      rail: true,
-      showLoginForm: false,
       loggedIn: false,
+      showLogoutNotification: false,
       token: '',
-      role: '',
-       menuItems: [
-        { icon: "mdi-home-city", value: "home" },
-        { icon: "mdi-account", value: "account", roles: ["ADMIN", "WORKER"] },
-        { icon: "mdi-account-group-outline", value: "users", roles: ["WORKER"] }
-      ],
-      currentComponent: 'HomePage'
+      role: ''
     };
   },
-  components: {
-    LoginForm
+  setup() {
+    const showDropdown = ref(false);
+
+    const toggleDropdown = () => {
+      showDropdown.value = !showDropdown.value;
+    };
+
+    const closeDropdown = (event) => {
+  if (!event.target.closest('.text-gray-900')) {
+    showDropdown.value = false;
+  }
+};
+
+      onMounted(() => {
+      document.addEventListener('click', closeDropdown);
+    });
+
+    onUnmounted(() => {
+      document.removeEventListener('click', closeDropdown);
+    });
+   
+
+    return {
+      showDropdown,
+      toggleDropdown
+    };
   },
-  computed: {
-    filteredMenuItems() {
-      return this.menuItems.filter(item => {
-        if (item.roles) {
-          return item.roles.includes(this.role);
-        }
-        return true;
-      });
-    }
+  mounted() {
+    const router = useRouter();
+
+    eventBus.$on('login-success', (token, role) => {
+      this.loggedIn = true;
+      this.token = token;
+      this.role = role;
+      router.push('/home');
+    });
   },
   methods: {
-    selectMenuItem(item) {
-      this.drawer = false;
-      this.showLoginForm = false;
-
-      if (item.value === 'users') {
-        this.$router.push('/users');
-        console.log("users")
-      }
-    },
     logout() {
       this.loggedIn = false;
       this.token = '';
+      this.showLogoutNotification = true;
+      setTimeout(() => {
+        this.showLogoutNotification = false;
+      }, 3000); 
     },
-    loginSuccess(token, role) {
-      this.loggedIn = true;
-      this.showLoginForm = false;
-      this.token = token;
-      this.role = role;
-    }
   }
 };
 </script>
+
