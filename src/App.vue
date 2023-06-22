@@ -8,7 +8,7 @@
         </a>
 
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Dean's Office</a>
-        <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</a>
+        <router-link to="/workers" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</router-link>
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Help</a>
 
         <div v-if="role == 'WORKER'" class="relative ml-4" ref="dropdown">

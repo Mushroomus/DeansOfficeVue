@@ -55,7 +55,6 @@ export default {
         .then(data => {
           const token = data.token;
           const role = data.role;
-
           eventBus.$emit('login-success', token, role);
         })
         .catch(error => {
