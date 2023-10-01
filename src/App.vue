@@ -11,13 +11,13 @@
         <router-link to= "/workers" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</router-link>
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Help</a>
 
-        <div v-if="role == 'WORKER'" class="relative ml-4" ref="dropdown">
+        <div v-if="role == 'USER'" class="relative ml-4" ref="dropdown">
           <button @click="toggleDropdown" class="text-sm font-semibold leading-6 text-gray-900">
             Appointments
           </button>
           <div v-show="showDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Create</a>
+              <router-link to="/createAppointment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Create</router-link>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Manage</a>
               <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">History</a>
             </div>
@@ -61,6 +61,9 @@
 import eventBus from './eventBus';
 import { useRouter } from 'vue-router';
 import { ref, onMounted, onUnmounted } from 'vue';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 export default {
   data() {
