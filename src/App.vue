@@ -8,7 +8,7 @@
         </a>
 
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Dean's Office</a>
-        <router-link to="/workers" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</router-link>
+        <router-link to= "/workers" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</router-link>
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Help</a>
 
         <div v-if="role == 'WORKER'" class="relative ml-4" ref="dropdown">
@@ -67,7 +67,6 @@ export default {
     return {
       loggedIn: false,
       showLogoutNotification: false,
-      token: '',
       role: ''
     };
   },
@@ -103,7 +102,7 @@ export default {
 
     eventBus.$on('login-success', (token, role) => {
       this.loggedIn = true;
-      this.token = token;
+      localStorage.setItem('token', token);
       this.role = role;
       router.push('/home');
     });
@@ -111,7 +110,7 @@ export default {
   methods: {
     logout() {
       this.loggedIn = false;
-      this.token = '';
+      localStorage.removeItem('token');
       this.showLogoutNotification = true;
       setTimeout(() => {
         this.showLogoutNotification = false;

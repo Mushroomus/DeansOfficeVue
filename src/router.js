@@ -7,7 +7,7 @@ const routes = [
   { path: '/', redirect: '/home' },
   { path: '/home', component: MainView},
   { path: '/login', component: LoginForm },
-  { path: '/workers', component: WorkersDataTable }
+  { path: '/workers', name: "Workers", component: WorkersDataTable, props: true }
 ];
 
 const router = createRouter({
