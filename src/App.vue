@@ -8,7 +8,7 @@
         </a>
 
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Dean's Office</a>
-        <router-link to= "/workers" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</router-link>
+        <router-link v-if="role == 'ADMIN'" to= "/workers" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Workers</router-link>
         <a href="#" class="text-sm font-semibold leading-6 text-gray-900 ml-4">Help</a>
 
         <div v-if="role == 'USER'" class="relative ml-4" ref="dropdown">
@@ -17,13 +17,12 @@
           </button>
           <div v-show="showDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-              <router-link to="/createAppointment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Create</router-link>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Manage</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">History</a>
+              <router-link to="/createAppointment" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">New Appointment</router-link>
+              <router-link to="/studentAppointments" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Appointments</router-link>
             </div>
           </div>
+          <router-link to="/studentProfile" class="text-sm font-semibold leading-6 text-gray-900 ml-4" role="menuitem">Student Profile</router-link>
         </div>
-
       </div>
 
       <div class="hidden lg:flex lg:justify-end">
@@ -62,8 +61,10 @@ import eventBus from './eventBus';
 import { useRouter } from 'vue-router';
 import { ref, onMounted, onUnmounted } from 'vue';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap";
+
+import 'font-awesome/css/font-awesome.css'
 
 export default {
   data() {
