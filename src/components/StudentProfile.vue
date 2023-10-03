@@ -73,7 +73,8 @@ export default {
       studentSurname: 'Doe',
       newSurname: '',
       editingSurname: false,
-      token: localStorage.getItem('token') || ''
+      token: this.$store.state.auth.token,
+      studentId: this.$store.state.auth.id
     };
   },
   mounted() {
@@ -82,9 +83,8 @@ export default {
   },
   methods: {
     async fetchStudentData() {
-      const studentId = 1;
       try {
-        const response = await axios.get(`http://localhost:8082/student/${studentId}`, {
+        const response = await axios.get(`http://localhost:8082/student/${this.studentId}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -98,9 +98,8 @@ export default {
       }
     },
     async fetchSpecializationMajorYear() {
-      const studentId = 1;
       try {
-        const response = await axios.get(`http://localhost:8082/student/${studentId}/specialization-major-year`, {
+        const response = await axios.get(`http://localhost:8082/student/${this.studentId}/specialization-major-year`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -121,9 +120,8 @@ export default {
       }
     },
     async fetchStudentSpecializationMajorYear() {
-      const studentId = 1;
       try {
-        const response = await axios.get(`http://localhost:8082/student/${studentId}/own-major-details`, {
+        const response = await axios.get(`http://localhost:8082/student/${this.studentId}/own-major-details`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -140,13 +138,11 @@ export default {
       }
     },
     async updateStudentData() {
-      const studentId = 1;
-
        var putName = this.studentName;
        var putSurname = this.studentSurname;
 
       try {
-        await axios.put(`http://localhost:8082/student/${studentId}`, {
+        await axios.put(`http://localhost:8082/student/${this.studentId}`, {
           name: putName,
           surname: putSurname
         }, {
@@ -161,9 +157,8 @@ export default {
       }
     },
     async deleteSpecializationMajorYear(specializationMajorYearId) {
-      const studentId = 1;
       try {
-        await axios.delete(`http://localhost:8082/student/${studentId}/own-major-details/${specializationMajorYearId}`, {
+        await axios.delete(`http://localhost:8082/student/${this.studentId}/own-major-details/${specializationMajorYearId}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -200,10 +195,9 @@ export default {
       this.editingSurname = false;
     },
     async addNewSpecializationToStudent() {
-      const studentId = 1;
       const specializationMajorYearId = this.selectedSpecializationMajorYearId;
       try {
-        await axios.post(`http://localhost:8082/student/${studentId}/own-major-details`, {
+        await axios.post(`http://localhost:8082/student/${this.studentId}/own-major-details`, {
           specializationMajorYearId
         }, {
           headers: {

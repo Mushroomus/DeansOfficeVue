@@ -92,7 +92,8 @@ export default {
       currentPage: 1,
       showModal: false,
       appointmentToCancel: null,
-      token: localStorage.getItem('token') || '',
+      token: this.$store.state.auth.token,
+      studentId: this.$store.state.auth.id
     };
   },
   mounted() {
@@ -101,7 +102,7 @@ export default {
   methods: {
     async fetchStudentAppointments() {
       try {
-        const response = await axios.get('http://localhost:8082/student/1/appointments', {
+        const response = await axios.get(`http://localhost:8082/student/${this.studentId}/appointments`, {
           headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.token}`
@@ -131,9 +132,8 @@ export default {
       this.showModal = false;
     },
     async confirmCancellationModal() {  
-      const studentId = 1;
       try {
-        await axios.get(`http://localhost:8082/student/${studentId}/appointment/${this.appointmentToCancel}`, {
+        await axios.get(`http://localhost:8082/student/${this.studentId}/appointment/${this.appointmentToCancel}`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -151,6 +151,7 @@ export default {
     },
   },
   computed: {
+    // ...mapState('auth', ['token', 'role', 'id']),
     paginatedData() {
       const startIndex = (this.currentPage - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;

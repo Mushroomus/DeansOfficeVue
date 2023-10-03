@@ -37,12 +37,14 @@
     </div>
 
     <div v-if="page === 3">
-        <div v-if="successMessage" class="alert alert-success alert-dismissible" role="alert">
-            {{ successMessage }}
+        <div v-if="successMessage">
+          <img src="\assets\img\success.png" style="max-width: 200px; height: auto; margin: 0 auto;"/><br>
+          <p class="mb-3 fw-bold" style="font-size: large; text-align: center;"> {{ successMessage }} </p>
         </div>
 
         <div v-if="failureMessage" class="alert alert-warning alert-dismissible" role="alert">
-            {{ failureMessage }}
+          <img src="\assets\img\failure.png" style="max-width: 200px; height: auto; margin: 0 auto;"/><br>
+          <p class="mb-3 fw-bold" style="font-size: large; text-align: center;"> {{ failureMessage }} </p>
         </div>
     </div>
 
@@ -73,7 +75,8 @@ export default {
       appointmentReason: '',
       successMessage: '',
       failureMessage: '',
-      token: localStorage.getItem('token') || ''
+      token: this.$store.state.auth.token,
+      studentId: this.$store.state.auth.id
     };
   },
   computed: {
@@ -95,10 +98,8 @@ export default {
   },
   methods: {
     async fetchWorkers() {
-      const studentId = 1; // Replace with the actual student ID
-      
       try {
-        const response = await axios.get(`http://localhost:8082/student/${studentId}/workers?matchSpecializations=false`, {
+        const response = await axios.get(`http://localhost:8082/student/${this.studentId}/workers?matchSpecializations=false`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -117,10 +118,8 @@ export default {
       this.selectedInterval = null;
     },
     async fetchWorkdays() {
-      const studentId = 1; 
-      
       try {
-        const response = await axios.get(`http://localhost:8082/student/${studentId}/worker/${this.selectedWorker.id}/workdays`, {
+        const response = await axios.get(`http://localhost:8082/student/${this.studentId}/worker/${this.selectedWorker.id}/workdays`, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${this.token}`
@@ -133,25 +132,19 @@ export default {
       }
     },
     async fetchIntervals(workday) {
-        const studentId = 1;
-
         try {
-            const response = await axios.get(`http://localhost:8082/student/${studentId}/worker/${this.selectedWorker.id}/workdays/${workday}/intervals`, {
+            const response = await axios.get(`http://localhost:8082/student/${this.studentId}/worker/${this.selectedWorker.id}/workdays/${workday}/intervals`, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${this.token}`
             }
         });
-
         this.intervals = response.data.intervals;   
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching workers:', error);
       }
     },
     async confirmAppointment() {
-        const studentId = 1;
-
         try {
             var formattedInterval = this.selectedInterval.split(' ')[0];
 
@@ -161,7 +154,7 @@ export default {
                 }
             }
 
-            const response = await axios.put(`http://localhost:8082/student/${studentId}/worker/${this.selectedWorker.id}/workdays/${this.requestSelectedDateTimestamp}/interval/${formattedInterval}`, descriptionBody, {
+            const response = await axios.put(`http://localhost:8082/student/${this.studentId}/worker/${this.selectedWorker.id}/workdays/${this.requestSelectedDateTimestamp}/interval/${formattedInterval}`, descriptionBody, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${this.token}`
@@ -175,7 +168,6 @@ export default {
                 this.page++;
                 this.failureMessage = 'Something went wrong during making an appointment';
             }
-
       } catch (error) {
             console.error('Error fetching workers:', error);
       }

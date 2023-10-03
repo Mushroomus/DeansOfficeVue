@@ -55,6 +55,13 @@ export default {
         .then(data => {
           const token = data.token;
           const role = data.role;
+          const id = data.id;
+          console.log(data);
+
+          this.$store.commit('setToken', token);
+          this.$store.commit('setRole', role);
+          this.$store.commit('setId', id);
+
           eventBus.$emit('login-success', token, role);
         })
         .catch(error => {
